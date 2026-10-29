@@ -1,6 +1,7 @@
 package com.smartseating.ui;
 
 import com.smartseating.service.PrintService;
+import com.smartseating.model.User;
 import com.smartseating.util.*;
 import javax.swing.*;
 import java.awt.*;
