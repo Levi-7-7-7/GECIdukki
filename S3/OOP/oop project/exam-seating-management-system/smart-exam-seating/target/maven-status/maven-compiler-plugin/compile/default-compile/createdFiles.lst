@@ -5,6 +5,7 @@ com/smartseating/ui/StudentFrame.class
 com/smartseating/model/Department.class
 com/smartseating/dao/RoomTemplateDAO.class
 com/smartseating/dao/UserDAO.class
+com/smartseating/service/PdfExporter.class
 com/smartseating/util/Validation.class
 com/smartseating/model/Room.class
 com/smartseating/ui/AttendanceFrame.class

@@ -8,7 +8,18 @@ import java.time.format.DateTimeFormatter;
 
 public final class PrintService {
     private PrintService() { }
-    public static void print(String title,String body){PrinterJob job=PrinterJob.getPrinterJob();job.setJobName("Smart Seating - "+title);job.setPrintable(new ReportPrintable(title,body));if(job.printDialog())try{job.print();}catch(PrinterException ex){throw new IllegalStateException("Printing failed: "+ex.getMessage(),ex);}}
+    /** Prints a report; if the computer has no printer, offers to save the report as a text file instead. */
+    public static void print(String title,String body){
+        if(PrinterJob.lookupPrintServices().length==0){saveAsText(title,body);return;}
+        PrinterJob job=PrinterJob.getPrinterJob();job.setJobName("Smart Seating - "+title);job.setPrintable(new ReportPrintable(title,body));if(job.printDialog())try{job.print();}catch(PrinterException ex){throw new IllegalStateException("Printing failed: "+ex.getMessage(),ex);}}
+    private static void saveAsText(String title,String body){
+        javax.swing.JOptionPane.showMessageDialog(null,"No printer is installed on this computer.\nThe report will be saved as a text file instead.","Print",javax.swing.JOptionPane.INFORMATION_MESSAGE);
+        javax.swing.JFileChooser chooser=new javax.swing.JFileChooser();
+        chooser.setSelectedFile(new java.io.File(title.replaceAll("[^A-Za-z0-9]+","_")+".txt"));
+        if(chooser.showSaveDialog(null)!=javax.swing.JFileChooser.APPROVE_OPTION)return;
+        try{java.nio.file.Files.writeString(chooser.getSelectedFile().toPath(),title+"\n\n"+body);}
+        catch(java.io.IOException ex){throw new IllegalStateException("Could not save report: "+ex.getMessage(),ex);}
+    }
     private static final class ReportPrintable implements Printable{
         private final String title,body;
         ReportPrintable(String title,String body){this.title=title;this.body=body;}
